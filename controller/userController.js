@@ -1,3 +1,6 @@
+/* eslint-disable radix */
+const { genSaltSync, hash } = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const Users = require('../model/userModel');
 const { yupUserSchema } = require('../yupValidation/yupValidation');
 
@@ -7,8 +10,19 @@ module.exports.newUser = async (req, res) => {
     await yupUserSchema.validate(userData, {
       abortEarly: false,
     });
+
+    const salt = genSaltSync(parseInt(process.env.SALT));
+    const hashedPassword = await hash(userData.password, salt);
+    userData.password = hashedPassword;
+
     const saveUser = await userData.save(userData);
-    res.status(200).json(saveUser);
+    const userName = {
+      userName: saveUser.userName,
+    };
+    const token = jwt.sign(userName, process.env.JWT_SECRET, {
+      expiresIn: '100m',
+    });
+    res.status(200).json({ ...userName, token });
   } catch (err) {
     res.status(501).json(err);
   }
