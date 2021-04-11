@@ -1,5 +1,5 @@
-const Message = require('../model/messageSchema');
-const { yupMessageSchema } = require('../yupValidation/messageValidation');
+const Message = require('../model/messageModel');
+const { yupMessageSchema } = require('../yupValidation/yupValidation');
 
 module.exports.saveMessage = async (req, res) => {
   const userName = req.params;
