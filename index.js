@@ -7,12 +7,14 @@ require('dotenv').config();
 const { dbConnection } = require('./DB/DbConnection');
 const messageRoutes = require('./routes/messageRoutes');
 const userRoutes = require('./routes/userRoutes');
+const { errorHandler } = require('./middleware/errorHandler');
 
 dbConnection();
 app.use(cors());
 app.use(express.json());
-
 app.use('/message', messageRoutes);
 app.use('/user', userRoutes);
+
+app.use(errorHandler);
 
 app.listen(5000, () => console.log('Express on'));
