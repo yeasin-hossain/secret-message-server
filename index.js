@@ -19,4 +19,4 @@ app.get('/', (req, res) => {
 });
 app.use(errorHandler);
 
-app.listen(5000, () => console.log('Express on'));
+app.listen(process.env.PORT || 5000, () => console.log('Express on'));
