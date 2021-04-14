@@ -14,7 +14,9 @@ app.use(cors());
 app.use(express.json());
 app.use('/message', messageRoutes);
 app.use('/user', userRoutes);
-
+app.get('/', (req, res) => {
+  res.send('hello world');
+});
 app.use(errorHandler);
 
 app.listen(5000, () => console.log('Express on'));
