@@ -27,7 +27,7 @@ module.exports.newUser = async (req, res, next) => {
       userName: saveUser.userName,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: '100m',
+      expiresIn: '1h',
     });
     res.status(200).json({ ...payload, token });
   } catch (err) {
@@ -37,31 +37,35 @@ module.exports.newUser = async (req, res, next) => {
 
 // Login User
 
+// eslint-disable-next-line consistent-return
 module.exports.loginUser = async (req, res, next) => {
   const userCredational = req.body;
   try {
-    await yupLoginUser.validate(userCredational, {
+    const validate = await yupLoginUser.isValid(userCredational, {
       abortEarly: false,
     });
+
+    if (!validate) {
+      return res.status(200).json({ message: 'invalid user validation error' });
+    }
     const user = await Users.findOne({ userName: userCredational.userName });
-    console.log(user);
     if (!user) {
-      const error = new Error('invalid User');
-      res.status(500);
-      throw error;
+      return res.status(200).json({ message: 'invalid user not found' });
     }
     const validatePassword = await compare(userCredational.password, user.password);
+
     if (!validatePassword) {
-      return res.status(200).json({ message: 'invalid user' });
+      return res.status(200).json({ message: 'invalid user password error' });
     }
+
     const payload = {
       name: user.name,
       userName: user.userName,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: '100m',
+      expiresIn: '2m',
     });
-    res.status(200).json({ ...payload, token });
+    res.status(200).json({ user: { ...payload, token } });
   } catch (err) {
     next(err);
   }

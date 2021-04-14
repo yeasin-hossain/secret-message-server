@@ -21,3 +21,14 @@ module.exports.saveMessage = async (req, res) => {
     res.status(501).json(err);
   }
 };
+
+// Get All Message
+module.exports.getMessage = async (req, res) => {
+  const { userName } = req.params;
+  try {
+    const allMessages = await Message.find({ userName });
+    res.json(allMessages);
+  } catch (err) {
+    console.log(err);
+  }
+};
