@@ -40,6 +40,7 @@ module.exports.newUser = async (req, res, next) => {
 // eslint-disable-next-line consistent-return
 module.exports.loginUser = async (req, res, next) => {
   const userCredational = req.body;
+  console.log(req.ip);
   try {
     const validate = await yupLoginUser.isValid(userCredational, {
       abortEarly: false,
@@ -63,7 +64,7 @@ module.exports.loginUser = async (req, res, next) => {
       userName: user.userName,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: '2m',
+      expiresIn: '1day',
     });
     res.status(200).json({ user: { ...payload, token } });
   } catch (err) {
