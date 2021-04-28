@@ -13,7 +13,7 @@ const messageSchema = mongoose.Schema({
   date: {
     type: String,
     required: true,
-    default: moment().format('MMMM Do YYYY, h:mm'),
+    default: moment().format('MMMM Do YYYY, h:mm a'),
   },
 });
 
