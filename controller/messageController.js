@@ -26,7 +26,7 @@ module.exports.saveMessage = async (req, res) => {
 module.exports.getMessage = async (req, res) => {
   const { userName } = req.params;
   try {
-    const allMessages = await Message.find({ userName });
+    const allMessages = await Message.find({ userName }).sort({ date: -1 });
     res.json(allMessages);
   } catch (err) {
     console.log(err);
